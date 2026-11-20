@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form 3 Math: 3D Mensuration Formula Match</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tone.js for Synthesized Sound Effects -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <!-- Google Fonts: Inter for UI & STIX Two Math for crisp mathematical typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=STIX+Two+Math&display=swap" rel="stylesheet">
+
+  <style>
+    /* Base Typography & Background Pattern */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f1f5f9;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 20px 20px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Mathematical Typography */
+    .math-font {
+      font-family: 'STIX Two Math', 'Times New Roman', serif;
+    }
+
+    .math-var {
+      font-style: italic;
+    }
+
+    /* Stacked Fraction Styling for Textbooks */
+    .fraction {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 0.2em;
+      font-size: 0.78em;
+      line-height: 1.05;
+    }
+    .fraction .num {
+      border-bottom: 1.5px solid currentColor;
+      padding: 0 0.2em 1px;
+    }
+    .fraction .den {
+      padding: 1px 0.2em 0;
+    }
+
+    /* 3D Card Flip Mechanics */
+    .card-scene {
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 0.875rem;
+      overflow: hidden;
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+    }
+
+    /* Colorful & Playful Card Back Pattern */
+    .card-back-pattern {
+      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 38%, #ec4899 74%, #f59e0b 100%);
+      background-size: 130% 130%;
+      transition: box-shadow 0.25s ease, filter 0.25s ease;
+    }
+
+    .card-scene:hover .card-inner:not(.is-flipped) .card-back-pattern {
+      box-shadow: 0 10px 22px -4px rgba(147, 51, 234, 0.45);
+      filter: brightness(1.05);
+    }
+
+    .card-back-dots {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.24) 1.2px, transparent 1.2px);
+      background-size: 12px 12px;
+    }
+
+    /* Animations for Match & Mismatch Feedback */
+    @keyframes matchPulse {
+      0% { transform: rotateY(180deg) scale(1); }
+      40% { transform: rotateY(180deg) scale(1.06); }
+      100% { transform: rotateY(180deg) scale(1); }
+    }
+
+    @keyframes mismatchShake {
+      0%, 100% { transform: rotateY(180deg) translateX(0); }
+      20% { transform: rotateY(180deg) translateX(-6px); }
+      40% { transform: rotateY(180deg) translateX(6px); }
+      60% { transform: rotateY(180deg) translateX(-4px); }
+      80% { transform: rotateY(180deg) translateX(4px); }
+    }
+
+    .card-inner.matched-anim {
+      animation: matchPulse 0.5s ease-out forwards;
+    }
+
+    .card-inner.mismatch-anim {
+      animation: mismatchShake 0.42s ease-in-out;
+    }
+
+    /* Confetti Particle Animation */
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(105vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .confetti-piece {
+      position: fixed;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      z-index: 60;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+  <!-- Top Navigation & Classroom Controls Header -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2">
+      <!-- Title & Subtitle -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shrink-0">
+          <!-- 3D Cone & Cylinder SVG Icon -->
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3L4 19c0 1.66 3.58 3 8 3s8-1.34 8-3L12 3z" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 19c0-1.66 3.58-3 8-3s8 1.34 8 3" stroke-dasharray="2 2"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight leading-tight">
+              3D Mensuration Formula Match
+            </h1>
+            <span class="hidden sm:inline-block text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+              HK Form 3 Math
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 hidden sm:block">
+            Match each geometric measurement with its correct mathematical formula
+          </p>
+        </div>
+      </div>
+
+      <!-- Classroom Action Buttons -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- Level Switcher Pill -->
+        <button id="btn-change-level" type="button" title="Choose Level 1 or Level 2"
+          class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs sm:text-sm font-bold border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 transition flex items-center gap-1 active:scale-95">
+          <span id="header-level-label">Level 1</span>
+          <svg class="w-3.5 h-3.5 opacity-75" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Bilingual Toggle (English / Traditional Chinese Support) -->
+        <button id="btn-lang" type="button" title="Toggle Traditional Chinese Subtitles"
+          class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition active:scale-95">
+          EN / 繁中
+        </button>
+
+        <!-- Formula Reference Sheet Button -->
+        <button id="btn-reference" type="button"
+          class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition flex items-center gap-1.5 active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+          <span>Formula Sheet</span>
+        </button>
+
+        <!-- Exciting Background Music Toggle -->
+        <button id="btn-music" type="button" title="Toggle Exciting Background Music"
+          class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition flex items-center gap-1.5 active:scale-95">
+          <svg id="icon-music-on" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+          <svg id="icon-music-off" class="w-4 h-4 hidden text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM3 3l18 18"/>
+          </svg>
+          <span class="hidden md:inline">Music</span>
+        </button>
+
+        <!-- Sound Toggle -->
+        <button id="btn-sound" type="button" title="Toggle Sound Effects"
+          class="p-1.5 sm:p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 transition active:scale-95">
+          <svg id="icon-sound-on" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+          </svg>
+          <svg id="icon-sound-off" class="w-4 h-4 sm:w-5 sm:h-5 hidden text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+          </svg>
+        </button>
+
+        <!-- New Game / Shuffle Button -->
+        <button id="btn-restart" type="button"
+          class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition flex items-center gap-1.5 active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span>New Game</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scoreboard & Live Pedagogical Banner -->
+  <section class="max-w-7xl w-full mx-auto px-3 sm:px-6 pt-3 pb-1">
+    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <!-- Stats Pills -->
+      <div class="flex items-center gap-3 sm:gap-5">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Matched</span>
+          <span id="stat-matched" class="text-sm sm:text-base font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-lg border border-emerald-200">
+            0 / 9
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Moves</span>
+          <span id="stat-moves" class="text-sm sm:text-base font-bold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-lg">
+            0
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Time</span>
+          <span id="stat-timer" class="text-sm sm:text-base font-bold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-lg tabular-nums">
+            00:00
+          </span>
+        </div>
+
+        <div id="streak-badge" class="hidden items-center gap-1 text-xs font-extrabold text-amber-700 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full">
+          <span>🔥 Streak ×</span><span id="stat-streak">2</span>
+        </div>
+      </div>
+
+      <!-- Live Formula Confirmation Banner (Reads out matched equation for class reinforcement) -->
+      <div id="live-banner" class="flex-1 min-w-[220px] text-left sm:text-right">
+        <span class="text-xs sm:text-sm font-medium text-slate-500">
+          Tap any two cards to match a <strong class="text-blue-700">3D Concept</strong> with its <strong class="text-purple-700">Formula</strong>.
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Card Grid Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-3 flex flex-col justify-center">
+    <!-- 3x6 grid on mobile/portrait, 6x3 grid on medium/desktop screens -->
+    <div id="card-grid" class="grid grid-cols-3 md:grid-cols-6 gap-2.5 sm:gap-3.5 w-full">
+      <!-- Cards injected dynamically by JavaScript -->
+    </div>
+  </main>
+
+  <!-- Subtle Legend Footer -->
+  <footer class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-2.5 text-center text-xs text-slate-500 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+    <span><strong class="math-font italic text-slate-700">r</strong> = radius</span>
+    <span>•</span>
+    <span><strong class="math-font italic text-slate-700">h</strong> = height</span>
+    <span>•</span>
+    <span><strong class="math-font italic text-slate-700">l</strong> = slant height</span>
+    <span>•</span>
+    <span><strong class="math-font italic text-slate-700">A</strong> = base area</span>
+  </footer>
+
+  <!-- Formula Reference Sheet Modal -->
+  <div id="modal-reference" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 sm:p-6">
+    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div>
+          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">Form 3 Mensuration Formula Sheet</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Review the 9 essential circle &amp; 3D solid formulas before playing</p>
+        </div>
+        <button id="btn-close-reference" type="button" class="p-2 rounded-xl hover:bg-slate-200 text-slate-600 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div id="reference-list" class="p-4 sm:p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="px-5 py-3 border-t border-slate-200 bg-slate-50 flex justify-end">
+        <button id="btn-close-reference-bottom" type="button" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition">
+          Back to Game
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pre-Game Level Selection Modal -->
+  <div id="modal-level-select" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/65 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-center">
+      <span class="inline-block text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-blue-100 text-blue-700 mb-2">
+        HK Form 3 Mathematics
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-6">
+        Select Level
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Level 1 Big Button -->
+        <button id="btn-select-level-1" type="button"
+          class="py-8 sm:py-12 px-6 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-2xl sm:text-3xl font-extrabold tracking-tight shadow-lg hover:shadow-xl transition-all active:scale-95 flex items-center justify-center">
+          Level 1
+        </button>
+
+        <!-- Level 2 Big Button -->
+        <button id="btn-select-level-2" type="button"
+          class="py-8 sm:py-12 px-6 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white text-2xl sm:text-3xl font-extrabold tracking-tight shadow-lg hover:shadow-xl transition-all active:scale-95 flex items-center justify-center">
+          Level 2
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory / Completion Modal -->
+  <div id="modal-victory" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl border border-slate-100 transform transition-all">
+      <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl shadow-inner">
+        🏆
+      </div>
+      <h2 class="text-2xl font-extrabold text-slate-900">Excellent Work!</h2>
+      <p id="victory-subtitle" class="text-sm text-slate-500 mt-1">All 9 mensuration formulas matched accurately.</p>
+
+      <!-- Star Rating -->
+      <div id="victory-stars" class="flex justify-center gap-1.5 my-4 text-3xl">
+        <span>⭐</span><span>⭐</span><span>⭐</span>
+      </div>
+
+      <!-- Summary Stats Grid -->
+      <div class="grid grid-cols-3 gap-2.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 mb-6">
+        <div>
+          <div class="text-[11px] font-bold uppercase text-slate-400">Time</div>
+          <div id="victory-time" class="text-base sm:text-lg font-extrabold text-slate-800 mt-0.5">00:00</div>
+        </div>
+        <div class="border-x border-slate-200">
+          <div class="text-[11px] font-bold uppercase text-slate-400">Moves</div>
+          <div id="victory-moves" class="text-base sm:text-lg font-extrabold text-slate-800 mt-0.5">0</div>
+        </div>
+        <div>
+          <div class="text-[11px] font-bold uppercase text-slate-400">Accuracy</div>
+          <div id="victory-accuracy" class="text-base sm:text-lg font-extrabold text-emerald-600 mt-0.5">100%</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2">
+        <button id="btn-victory-level" type="button" class="flex-1 py-2.5 px-3 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs sm:text-sm transition">
+          Switch Level
+        </button>
+        <button id="btn-victory-review" type="button" class="flex-1 py-2.5 px-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition">
+          Formulas
+        </button>
+        <button id="btn-victory-replay" type="button" class="flex-1 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition">
+          Play Again
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Form 3 Mathematics: 3D Mensuration & Circle Formula Matching Game
+     * Covers the exact 9 curriculum formulas requested:
+     * 1. Volume of cylinder
+     * 2. Volume of pyramid
+     * 3. Volume of cone
+     * 4. Volume of sphere
+     * 5. Curved surface area of cylinder
+     * 6. Curved surface area of cone
+     * 7. Surface area of sphere
+     * 8. Area of circle
+     * 9. Circumference of circle
+     */
+
+    // Curriculum Dataset with custom SVG geometric diagrams, HTML textbook formulas, and Traditional Chinese translations
+    const FORMULA_PAIRS = [
+      {
+        id: 'vol-cylinder',
+        title: 'Volume of Cylinder',
+        zh: '圓柱體體積',
+        category: '3D Volume',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold">&pi;<span class="math-var">r</span><sup>2</sup><span class="math-var">h</span></span>`,
+        plainFormula: 'πr²h',
+        note: '',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <ellipse cx="50" cy="16" rx="24" ry="7" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+            <path d="M26 16 v38 c0 4 10.7 7 24 7 s24-3 24-7 V16" fill="#eff6ff" fill-opacity="0.7" stroke="#2563eb" stroke-width="2"/>
+            <path d="M26 54 c0-4 10.7-7 24-7 s24 3 24 7" fill="none" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <line x1="50" y1="16" x2="74" y2="16" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="60" y="13" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+            <line x1="81" y1="16" x2="81" y2="54" stroke="#059669" stroke-width="1.8"/>
+            <text x="85" y="38" font-size="10" font-style="italic" font-weight="bold" fill="#059669">h</text>
+          </svg>`
+      },
+      {
+        id: 'vol-pyramid',
+        title: 'Volume of Pyramid',
+        zh: '角錐體體積',
+        category: '3D Volume',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold"><span class="fraction"><span class="num">1</span><span class="den">3</span></span><span class="math-var">A</span><span class="math-var">h</span></span>`,
+        plainFormula: '⅓Ah',
+        note: 'A = Base Area',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <polygon points="22,56 64,62 82,48 40,42" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+            <line x1="52" y1="10" x2="22" y2="56" stroke="#2563eb" stroke-width="2"/>
+            <line x1="52" y1="10" x2="64" y2="62" stroke="#2563eb" stroke-width="2"/>
+            <line x1="52" y1="10" x2="82" y2="48" stroke="#2563eb" stroke-width="2"/>
+            <line x1="52" y1="10" x2="40" y2="42" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <line x1="52" y1="10" x2="52" y2="52" stroke="#059669" stroke-width="1.8" stroke-dasharray="2 2"/>
+            <text x="55" y="35" font-size="10" font-style="italic" font-weight="bold" fill="#059669">h</text>
+            <text x="36" y="55" font-size="10" font-style="italic" font-weight="bold" fill="#1d4ed8">A</text>
+          </svg>`
+      },
+      {
+        id: 'vol-cone',
+        title: 'Volume of Cone',
+        zh: '圓錐體體積',
+        category: '3D Volume',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold"><span class="fraction"><span class="num">1</span><span class="den">3</span></span>&pi;<span class="math-var">r</span><sup>2</sup><span class="math-var">h</span></span>`,
+        plainFormula: '⅓πr²h',
+        note: '',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <path d="M50 10 L24 55 c0 4.5 11.6 8 26 8 s26-3.5 26-8 L50 10z" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+            <path d="M24 55 c0-4.5 11.6-8 26-8 s26 3.5 26 8" fill="none" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <line x1="50" y1="10" x2="50" y2="55" stroke="#059669" stroke-width="1.8" stroke-dasharray="2 2"/>
+            <text x="41" y="38" font-size="10" font-style="italic" font-weight="bold" fill="#059669">h</text>
+            <line x1="50" y1="55" x2="76" y2="55" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="61" y="52" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+          </svg>`
+      },
+      {
+        id: 'vol-sphere',
+        title: 'Volume of Sphere',
+        zh: '球體體積',
+        category: '3D Volume',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold"><span class="fraction"><span class="num">4</span><span class="den">3</span></span>&pi;<span class="math-var">r</span><sup>3</sup></span>`,
+        plainFormula: '⁴⁄₃πr³',
+        note: '',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <circle cx="50" cy="36" r="26" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+            <ellipse cx="50" cy="36" rx="26" ry="8" fill="none" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <circle cx="50" cy="36" r="2" fill="#dc2626"/>
+            <line x1="50" y1="36" x2="76" y2="36" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="61" y="32" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+          </svg>`
+      },
+      {
+        id: 'csa-cylinder',
+        title: 'Curved Surface Area of Cylinder',
+        zh: '圓柱體曲面面積',
+        category: 'Surface Area',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold">2&pi;<span class="math-var">r</span><span class="math-var">h</span></span>`,
+        plainFormula: '2πrh',
+        note: '',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <path d="M26 16 v38 c0 4 10.7 7 24 7 s24-3 24-7 V16 c0 4-10.7 7-24 7 s-24-3-24-7z" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+            <ellipse cx="50" cy="16" rx="24" ry="7" fill="#ffffff" stroke="#2563eb" stroke-width="1.8"/>
+            <line x1="50" y1="16" x2="74" y2="16" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="60" y="13" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+            <line x1="81" y1="16" x2="81" y2="54" stroke="#059669" stroke-width="1.8"/>
+            <text x="85" y="38" font-size="10" font-style="italic" font-weight="bold" fill="#059669">h</text>
+          </svg>`
+      },
+      {
+        id: 'csa-cone',
+        title: 'Curved Surface Area of Cone',
+        zh: '圓錐體曲面面積',
+        category: 'Surface Area',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold">&pi;<span class="math-var">r</span><span class="math-var">l</span></span>`,
+        plainFormula: 'πrl',
+        note: 'l = slant height',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <path d="M50 10 L24 55 c0 4.5 11.6 8 26 8 s26-3.5 26-8 L50 10z" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+            <ellipse cx="50" cy="55" rx="26" ry="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <line x1="50" y1="10" x2="76" y2="55" stroke="#7c3aed" stroke-width="2.2"/>
+            <text x="67" y="31" font-size="10" font-style="italic" font-weight="bold" fill="#7c3aed">l</text>
+            <line x1="50" y1="55" x2="76" y2="55" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="60" y="52" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+          </svg>`
+      },
+      {
+        id: 'sa-sphere',
+        title: 'Surface Area of Sphere',
+        zh: '球體表面面積',
+        category: 'Surface Area',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold">4&pi;<span class="math-var">r</span><sup>2</sup></span>`,
+        plainFormula: '4πr²',
+        note: '',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <circle cx="50" cy="36" r="26" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+            <ellipse cx="50" cy="36" rx="26" ry="8" fill="none" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="3 2"/>
+            <circle cx="50" cy="36" r="2" fill="#dc2626"/>
+            <line x1="50" y1="36" x2="76" y2="36" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="61" y="32" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+          </svg>`
+      },
+      {
+        id: 'area-circle',
+        title: 'Area of Circle',
+        zh: '圓面積',
+        category: '2D Circle',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold">&pi;<span class="math-var">r</span><sup>2</sup></span>`,
+        plainFormula: 'πr²',
+        note: '',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <circle cx="50" cy="36" r="25" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+            <circle cx="50" cy="36" r="2" fill="#dc2626"/>
+            <line x1="50" y1="36" x2="75" y2="36" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="60" y="32" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+          </svg>`
+      },
+      {
+        id: 'circ-circle',
+        title: 'Circumference of Circle',
+        zh: '圓周',
+        category: '2D Circle',
+        formulaHtml: `<span class="math-font text-xl sm:text-2xl md:text-3xl font-bold">2&pi;<span class="math-var">r</span></span>`,
+        plainFormula: '2πr',
+        note: '',
+        svg: `
+          <svg viewBox="0 0 100 72" class="w-16 h-12 sm:w-20 sm:h-14 mx-auto">
+            <circle cx="50" cy="36" r="25" fill="none" stroke="#059669" stroke-width="2.5"/>
+            <circle cx="50" cy="36" r="2" fill="#dc2626"/>
+            <line x1="50" y1="36" x2="75" y2="36" stroke="#dc2626" stroke-width="1.8"/>
+            <text x="60" y="32" font-size="10" font-style="italic" font-weight="bold" fill="#dc2626">r</text>
+          </svg>`
+      }
+    ];
+
+    // Level 1 includes the 4 volume formulas; Level 2 includes all 9 formulas
+    const LEVEL_1_IDS = ['vol-cylinder', 'vol-pyramid', 'vol-cone', 'vol-sphere'];
+
+    // Central Game State
+    const state = {
+      level: 1,
+      cards: [],
+      flippedIndices: [],
+      matchedIds: new Set(),
+      isLocked: false,
+      moves: 0,
+      streak: 0,
+      seconds: 0,
+      timerInterval: null,
+      hasStarted: false,
+      showChinese: false,
+      soundEnabled: true,
+      musicEnabled: true
+    };
+
+    // Return the active subset of formula pairs based on selected level
+    function getActivePairs() {
+      if (state.level === 1) {
+        return FORMULA_PAIRS.filter((item) => LEVEL_1_IDS.includes(item.id));
+      }
+      return FORMULA_PAIRS;
+    }
+
+    // Fisher-Yates Array Shuffle
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Format elapsed seconds into MM:SS
+    function formatTime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    // Synthesized Sound Effects & Exciting Arcade Quiz Background Music (Tone.js)
+    const SoundFX = {
+      initialized: false,
+      sfxSynth: null,
+      bgmSynth: null,
+      bassSynth: null,
+      kickSynth: null,
+      hatSynth: null,
+      bgmLoop: null,
+
+      async init() {
+        if (typeof Tone === 'undefined') return;
+        try {
+          await Tone.start();
+          if (this.initialized) return;
+
+          // Gentle polyphonic synth for card flips, matches & victory fanfare
+          this.sfxSynth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: 'triangle' },
+            envelope: { attack: 0.01, decay: 0.18, sustain: 0.08, release: 0.35 }
+          }).toDestination();
+          this.sfxSynth.volume.value = -9;
+
+          // Bright, punchy lead synth for an energetic game-show melody
+          this.bgmSynth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: 'triangle' },
+            envelope: { attack: 0.01, decay: 0.16, sustain: 0.08, release: 0.22 }
+          }).toDestination();
+          this.bgmSynth.volume.value = -16;
+
+          // Driving octave-bouncing bassline synth
+          this.bassSynth = new Tone.Synth({
+            oscillator: { type: 'triangle' },
+            envelope: { attack: 0.01, decay: 0.14, sustain: 0.05, release: 0.15 }
+          }).toDestination();
+          this.bassSynth.volume.value = -15;
+
+          // Punchy electronic kick pulse
+          this.kickSynth = new Tone.MembraneSynth({
+            pitchDecay: 0.03,
+            octaves: 4,
+            envelope: { attack: 0.005, decay: 0.15, sustain: 0, release: 0.1 }
+          }).toDestination();
+          this.kickSynth.volume.value = -17;
+
+          // Crisp off-beat hi-hat groove
+          this.hatSynth = new Tone.NoiseSynth({
+            noise: { type: 'white' },
+            envelope: { attack: 0.002, decay: 0.04, sustain: 0, release: 0.02 }
+          }).toDestination();
+          this.hatSynth.volume.value = -25;
+
+          // Upbeat 32-step (4-bar) arcade quiz loop in C Major / G Mixolydian
+          const leadPattern = [
+            'C5', null, 'E5', 'G5', 'A5', 'G5', 'E5', 'G5',
+            'D5', null, 'G5', 'B5', 'A5', 'G5', 'D5', null,
+            'A5', null, 'F5', 'A5', 'C6', 'B5', 'A5', 'G5',
+            'G5', 'A5', 'B5', 'C6', 'D6', null, 'B5', 'G5'
+          ];
+
+          const bassPattern = [
+            'C3', 'C4', 'C3', 'C4', 'G2', 'G3', 'C3', 'E3',
+            'G2', 'G3', 'G2', 'G3', 'D3', 'D4', 'G2', 'B2',
+            'F2', 'F3', 'F2', 'F3', 'C3', 'C4', 'F2', 'A2',
+            'G2', 'G3', 'A2', 'A3', 'B2', 'B3', 'G2', 'B2'
+          ];
+
+          let stepIndex = 0;
+          Tone.Transport.bpm.value = 128;
+          this.bgmLoop = new Tone.Loop((time) => {
+            const idx = stepIndex % leadPattern.length;
+            const beatPos = idx % 8;
+
+            // Driving four-on-the-floor kick on beats 1, 2, 3, 4
+            if (beatPos % 2 === 0 && this.kickSynth) {
+              this.kickSynth.triggerAttackRelease('C2', '16n', time);
+            }
+
+            // Crisp off-beat hi-hat on the "ands"
+            if (beatPos % 2 === 1 && this.hatSynth) {
+              this.hatSynth.triggerAttackRelease('32n', time);
+            }
+
+            // Bouncy bassline
+            if (bassPattern[idx] && this.bassSynth) {
+              this.bassSynth.triggerAttackRelease(bassPattern[idx], '16n', time);
+            }
+
+            // Energetic lead hook
+            if (leadPattern[idx] && this.bgmSynth) {
+              this.bgmSynth.triggerAttackRelease(leadPattern[idx], '16n', time);
+            }
+
+            stepIndex++;
+          }, '8n');
+
+          this.initialized = true;
+        } catch (err) {
+          console.warn('Audio initialization skipped:', err);
+        }
+      },
+
+      syncMusicState() {
+        if (!this.initialized || typeof Tone === 'undefined') return;
+        try {
+          if (state.soundEnabled && state.musicEnabled) {
+            if (this.bgmLoop && this.bgmLoop.state !== 'started') {
+              this.bgmLoop.start(0);
+            }
+            if (Tone.Transport.state !== 'started') {
+              Tone.Transport.start();
+            }
+          } else {
+            if (Tone.Transport.state === 'started') {
+              Tone.Transport.pause();
+            }
+          }
+        } catch (err) {
+          console.warn('Music sync error:', err);
+        }
+      },
+
+      async playFlip() {
+        if (!state.soundEnabled) return;
+        await this.init();
+        this.syncMusicState();
+        if (this.sfxSynth) {
+          this.sfxSynth.triggerAttackRelease('G5', '32n');
+        }
+      },
+
+      async playMatch(streak = 1) {
+        if (!state.soundEnabled) return;
+        await this.init();
+        if (!this.sfxSynth) return;
+        const notes = streak >= 2 ? ['C5', 'E5', 'G5', 'C6'] : ['C5', 'E5', 'G5'];
+        const now = Tone.now();
+        notes.forEach((n, idx) => {
+          this.sfxSynth.triggerAttackRelease(n, '16n', now + idx * 0.07);
+        });
+      },
+
+      async playMismatch() {
+        if (!state.soundEnabled) return;
+        await this.init();
+        if (!this.sfxSynth) return;
+        const now = Tone.now();
+        this.sfxSynth.triggerAttackRelease('E4', '16n', now);
+        this.sfxSynth.triggerAttackRelease('C4', '8n', now + 0.11);
+      },
+
+      async playVictory() {
+        if (!state.soundEnabled) return;
+        await this.init();
+        if (!this.sfxSynth) return;
+        const fanfare = ['C5', 'E5', 'G5', 'C6', 'G5', 'C6'];
+        const now = Tone.now();
+        fanfare.forEach((n, idx) => {
+          this.sfxSynth.triggerAttackRelease(n, idx === fanfare.length - 1 ? '4n' : '16n', now + idx * 0.1);
+        });
+      }
+    };
+
+    // Start Game Timer
+    function startTimer() {
+      if (state.timerInterval) return;
+      state.timerInterval = setInterval(() => {
+        state.seconds++;
+        document.getElementById('stat-timer').textContent = formatTime(state.seconds);
+      }, 1000);
+    }
+
+    // Stop Game Timer
+    function stopTimer() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+    }
+
+    // Build Deck of Cards for the Selected Level (8 cards in Level 1, 18 cards in Level 2)
+    function createDeck() {
+      const deck = [];
+      getActivePairs().forEach((item) => {
+        // Card A: Geometric Concept + Diagram
+        deck.push({
+          uid: `${item.id}-concept`,
+          pairId: item.id,
+          type: 'concept',
+          data: item
+        });
+        // Card B: Mathematical Formula
+        deck.push({
+          uid: `${item.id}-formula`,
+          pairId: item.id,
+          type: 'formula',
+          data: item
+        });
+      });
+      return shuffleArray(deck);
+    }
+
+    // Render the Cards into the Responsive Grid
+    function renderBoard() {
+      const grid = document.getElementById('card-grid');
+      grid.innerHTML = '';
+
+      // Adjust grid layout for 8 cards (Level 1) vs 18 cards (Level 2)
+      if (state.level === 1) {
+        grid.className = 'grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl w-full mx-auto';
+      } else {
+        grid.className = 'grid grid-cols-3 md:grid-cols-6 gap-2.5 sm:gap-3.5 w-full';
+      }
+
+      const cardHeightClass = state.level === 1
+        ? 'h-[145px] sm:h-[175px] md:h-[190px]'
+        : 'h-[126px] sm:h-[146px] md:h-[158px] lg:h-[168px]';
+
+      state.cards.forEach((card, index) => {
+        const isMatched = state.matchedIds.has(card.pairId);
+        const isFlipped = isMatched || state.flippedIndices.includes(index);
+
+        const cardWrapper = document.createElement('div');
+        cardWrapper.className = `card-scene ${cardHeightClass}`;
+        cardWrapper.dataset.index = index;
+
+        const zhClass = state.showChinese ? 'block' : 'hidden';
+
+        // Construct Front Face based on Concept vs Formula
+        let frontContent = '';
+        if (card.type === 'concept') {
+          frontContent = `
+            <div class="card-face card-front bg-white border-2 ${isMatched ? 'border-emerald-500 bg-emerald-50/60' : 'border-blue-200 hover:border-blue-400'} shadow-sm flex flex-col justify-between p-2 sm:p-2.5 transition-colors">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
+                  Shape
+                </span>
+                ${isMatched ? '<span class="text-emerald-600 font-extrabold text-xs">✓</span>' : ''}
+              </div>
+              <div class="my-auto flex flex-col items-center justify-center">
+                ${card.data.svg}
+                <h3 class="text-[11px] sm:text-xs md:text-[13px] font-bold text-slate-800 text-center leading-tight mt-1 px-0.5">
+                  ${card.data.title}
+                </h3>
+                <span class="zh-label ${zhClass} text-[10px] sm:text-[11px] font-medium text-blue-700 mt-0.5">
+                  ${card.data.zh}
+                </span>
+              </div>
+              <div class="h-1"></div>
+            </div>
+          `;
+        } else {
+          frontContent = `
+            <div class="card-face card-front bg-white border-2 ${isMatched ? 'border-emerald-500 bg-emerald-50/60' : 'border-purple-200 hover:border-purple-400'} shadow-sm flex flex-col justify-between p-2 sm:p-2.5 transition-colors">
+              <div class="flex items-center justify-between w-full">
+                <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">
+                  Formula
+                </span>
+                ${isMatched ? '<span class="text-emerald-600 font-extrabold text-xs">✓</span>' : ''}
+              </div>
+              <div class="my-auto flex flex-col items-center justify-center text-slate-900">
+                ${card.data.formulaHtml}
+                ${card.data.note ? `<span class="text-[10px] font-medium text-slate-500 mt-1 bg-slate-100 px-1.5 py-0.5 rounded">${card.data.note}</span>` : ''}
+              </div>
+              <div class="h-1"></div>
+            </div>
+          `;
+        }
+
+        cardWrapper.innerHTML = `
+          <div id="card-inner-${index}" class="card-inner ${isFlipped ? 'is-flipped' : ''}">
+            <!-- Colorful & Playful Card Back -->
+            <div class="card-face card-back-pattern border-2 border-white/50 shadow-md flex flex-col items-center justify-center p-2 text-white relative">
+              <!-- Subtle Polka-Dot Overlay & Inner Card Frame -->
+              <div class="absolute inset-0 card-back-dots pointer-events-none"></div>
+              <div class="absolute inset-1.5 rounded-xl border border-white/30 pointer-events-none"></div>
+
+              <!-- Decorative Floating 3D Shapes & Math Doodles -->
+              <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-35" viewBox="0 0 120 120" preserveAspectRatio="none">
+                <!-- Top-Right Mini Cone -->
+                <path d="M96 14 L86 32 Q96 36 106 32 Z" fill="#67e8f9" stroke="#ffffff" stroke-width="1.2"/>
+                <!-- Bottom-Left Mini Sphere -->
+                <circle cx="24" cy="94" r="10" fill="#fde047" stroke="#ffffff" stroke-width="1.2"/>
+                <ellipse cx="24" cy="94" rx="10" ry="3.5" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 1.5"/>
+                <!-- Bottom-Right Mini Cylinder -->
+                <rect x="88" y="84" width="16" height="16" rx="3" fill="#6ee7b7" stroke="#ffffff" stroke-width="1.2"/>
+                <!-- Playful Sparkles & Symbols -->
+                <text x="16" y="48" font-size="11" font-weight="bold" fill="#fef08a">+</text>
+                <text x="98" y="64" font-size="11" font-weight="bold" fill="#a5f3fc">&Delta;</text>
+                <circle cx="60" cy="14" r="2" fill="#ffffff"/>
+                <circle cx="60" cy="106" r="2" fill="#ffffff"/>
+              </svg>
+
+              <!-- Card Number Tag (Helpful for Classroom Smartboard Callouts) -->
+              <span class="absolute top-2.5 left-2.5 text-[10px] sm:text-[11px] font-extrabold px-1.5 py-0.5 rounded-md bg-black/25 text-white/95 backdrop-blur-xs border border-white/20">
+                #${index + 1}
+              </span>
+
+              <!-- Central Colorful Math Emblem -->
+              <div class="relative z-10 flex flex-col items-center">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl rotate-3 bg-white shadow-md border-2 border-amber-300 flex items-center justify-center mb-1.5">
+                  <span class="math-font -rotate-3 text-xl sm:text-2xl font-extrabold bg-gradient-to-br from-indigo-600 via-fuchsia-600 to-amber-500 bg-clip-text text-transparent">
+                    &pi;
+                  </span>
+                </div>
+                <span class="text-[9px] sm:text-[10px] font-extrabold tracking-wider uppercase px-2 py-0.5 rounded-full bg-white/20 border border-white/30 text-white shadow-2xs">
+                  Form 3 Math
+                </span>
+              </div>
+            </div>
+            <!-- Card Front -->
+            ${frontContent}
+          </div>
+        `;
+
+        cardWrapper.addEventListener('click', () => handleCardClick(index));
+        grid.appendChild(cardWrapper);
+      });
+    }
+
+    // Handle Card Tap/Click Interaction
+    function handleCardClick(index) {
+      if (state.isLocked) return;
+
+      const clickedCard = state.cards[index];
+      // Ignore already matched or currently flipped card
+      if (state.matchedIds.has(clickedCard.pairId) || state.flippedIndices.includes(index)) {
+        return;
+      }
+
+      // Start timer on very first move
+      if (!state.hasStarted) {
+        state.hasStarted = true;
+        startTimer();
+      }
+
+      SoundFX.playFlip();
+      state.flippedIndices.push(index);
+
+      const cardEl = document.getElementById(`card-inner-${index}`);
+      if (cardEl) cardEl.classList.add('is-flipped');
+
+      // Check for pair when 2 cards are flipped
+      if (state.flippedIndices.length === 2) {
+        state.moves++;
+        updateStatsUI();
+        checkForMatch();
+      }
+    }
+
+    // Evaluate whether the two flipped cards form a valid pair
+    function checkForMatch() {
+      state.isLocked = true;
+      const [idx1, idx2] = state.flippedIndices;
+      const card1 = state.cards[idx1];
+      const card2 = state.cards[idx2];
+
+      if (card1.pairId === card2.pairId) {
+        // Match Found!
+        state.matchedIds.add(card1.pairId);
+        state.streak++;
+        SoundFX.playMatch(state.streak);
+
+        // Update Live Reinforcement Banner so teacher & class see the full equation
+        const banner = document.getElementById('live-banner');
+        banner.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-xl">
+            <span>✓ Matched:</span>
+            <span>${card1.data.title}</span>
+            <span>=</span>
+            <span class="math-font text-base">${card1.data.plainFormula}</span>
+          </span>
+        `;
+
+        setTimeout(() => {
+          state.flippedIndices = [];
+          state.isLocked = false;
+          updateStatsUI();
+          renderBoard();
+
+          // Apply pulse animation to newly matched cards
+          [idx1, idx2].forEach((i) => {
+            const el = document.getElementById(`card-inner-${i}`);
+            if (el) el.classList.add('matched-anim');
+          });
+
+          // Check Victory Condition (All active pairs matched)
+          if (state.matchedIds.size === getActivePairs().length) {
+            handleVictory();
+          }
+        }, 380);
+      } else {
+        // Mismatch
+        state.streak = 0;
+        updateStatsUI();
+        SoundFX.playMismatch();
+
+        setTimeout(() => {
+          [idx1, idx2].forEach((i) => {
+            const el = document.getElementById(`card-inner-${i}`);
+            if (el) el.classList.add('mismatch-anim');
+          });
+        }, 250);
+
+        setTimeout(() => {
+          [idx1, idx2].forEach((i) => {
+            const el = document.getElementById(`card-inner-${i}`);
+            if (el) {
+              el.classList.remove('is-flipped', 'mismatch-anim');
+            }
+          });
+          state.flippedIndices = [];
+          state.isLocked = false;
+        }, 950);
+      }
+    }
+
+    // Update Top Scoreboard Counters
+    function updateStatsUI() {
+      const totalPairs = getActivePairs().length;
+      document.getElementById('stat-matched').textContent = `${state.matchedIds.size} / ${totalPairs}`;
+      document.getElementById('stat-moves').textContent = state.moves;
+
+      const streakBadge = document.getElementById('streak-badge');
+      if (state.streak >= 2) {
+        streakBadge.classList.remove('hidden');
+        streakBadge.classList.add('inline-flex');
+        document.getElementById('stat-streak').textContent = state.streak;
+      } else {
+        streakBadge.classList.add('hidden');
+        streakBadge.classList.remove('inline-flex');
+      }
+    }
+
+    // Victory Celebration
+    function handleVictory() {
+      stopTimer();
+      SoundFX.playVictory();
+      spawnConfetti();
+
+      const totalPairs = getActivePairs().length;
+      const accuracy = Math.min(100, Math.round((totalPairs / Math.max(state.moves, totalPairs)) * 100));
+      document.getElementById('victory-subtitle').textContent = state.level === 1
+        ? 'All 4 volume formulas matched accurately.'
+        : 'All 9 mensuration formulas matched accurately.';
+      document.getElementById('victory-time').textContent = formatTime(state.seconds);
+      document.getElementById('victory-moves').textContent = state.moves;
+      document.getElementById('victory-accuracy').textContent = `${accuracy}%`;
+
+      // Calculate Star Rating scaled to Level 1 (4 pairs) vs Level 2 (9 pairs)
+      const starsEl = document.getElementById('victory-stars');
+      const threeStarLimit = state.level === 1 ? 10 : 25;
+      const twoStarLimit = state.level === 1 ? 16 : 40;
+
+      if (state.moves <= threeStarLimit) {
+        starsEl.innerHTML = '<span>⭐</span><span>⭐</span><span>⭐</span>';
+      } else if (state.moves <= twoStarLimit) {
+        starsEl.innerHTML = '<span>⭐</span><span>⭐</span><span class="opacity-30">⭐</span>';
+      } else {
+        starsEl.innerHTML = '<span>⭐</span><span class="opacity-30">⭐</span><span class="opacity-30">⭐</span>';
+      }
+
+      setTimeout(() => {
+        const modal = document.getElementById('modal-victory');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }, 450);
+    }
+
+    // Lightweight CSS Confetti Effect
+    function spawnConfetti() {
+      const colors = ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+      for (let i = 0; i < 45; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece rounded-xs';
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = `${1.8 + Math.random() * 1.8}s`;
+        piece.style.animationDelay = `${Math.random() * 0.4}s`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 4000);
+      }
+    }
+
+    // Populate Formula Reference Sheet Modal
+    function populateReferenceSheet() {
+      const list = document.getElementById('reference-list');
+      list.innerHTML = FORMULA_PAIRS.map((item) => {
+        const isLevel1 = LEVEL_1_IDS.includes(item.id);
+        const levelBadge = isLevel1
+          ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">Level 1 &amp; 2</span>'
+          : '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">Level 2</span>';
+
+        return `
+          <div class="bg-slate-50 rounded-2xl border border-slate-200 p-3.5 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-12 shrink-0 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-1">
+                ${item.svg}
+              </div>
+              <div>
+                <div class="mb-0.5">${levelBadge}</div>
+                <div class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">${item.title}</div>
+                <div class="text-xs text-blue-700 font-medium">${item.zh}</div>
+                ${item.note ? `<div class="text-[11px] text-slate-500 mt-0.5">${item.note}</div>` : ''}
+              </div>
+            </div>
+            <div class="bg-white px-3 py-2 rounded-xl border border-purple-200 text-purple-900 shrink-0 shadow-2xs">
+              ${item.formulaHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Select a Level and Begin
+    async function selectLevel(levelNum) {
+      state.level = levelNum;
+      document.getElementById('header-level-label').textContent = `Level ${levelNum}`;
+
+      const levelModal = document.getElementById('modal-level-select');
+      levelModal.classList.add('hidden');
+      levelModal.classList.remove('flex');
+
+      if (state.soundEnabled && state.musicEnabled) {
+        await SoundFX.init();
+        SoundFX.syncMusicState();
+      }
+
+      initNewGame();
+    }
+
+    // Reset & Start a Fresh Shuffled Round
+    function initNewGame() {
+      stopTimer();
+      state.cards = createDeck();
+      state.flippedIndices = [];
+      state.matchedIds = new Set();
+      state.isLocked = false;
+      state.moves = 0;
+      state.streak = 0;
+      state.seconds = 0;
+      state.hasStarted = false;
+
+      document.getElementById('stat-timer').textContent = '00:00';
+      document.getElementById('live-banner').innerHTML = `
+        <span class="text-xs sm:text-sm font-medium text-slate-500">
+          Tap any two cards to match a <strong class="text-blue-700">3D Concept</strong> with its <strong class="text-purple-700">Formula</strong>.
+        </span>
+      `;
+      updateStatsUI();
+      renderBoard();
+    }
+
+    // Wire Up Event Listeners on DOM Ready
+    window.addEventListener('DOMContentLoaded', () => {
+      populateReferenceSheet();
+      initNewGame();
+
+      // Level Selection Modal Controls
+      const levelModal = document.getElementById('modal-level-select');
+      document.getElementById('btn-select-level-1').addEventListener('click', () => selectLevel(1));
+      document.getElementById('btn-select-level-2').addEventListener('click', () => selectLevel(2));
+      document.getElementById('btn-change-level').addEventListener('click', () => {
+        stopTimer();
+        levelModal.classList.remove('hidden');
+        levelModal.classList.add('flex');
+      });
+
+      // Restart Button
+      document.getElementById('btn-restart').addEventListener('click', initNewGame);
+
+      // Background Music Toggle
+      document.getElementById('btn-music').addEventListener('click', async (e) => {
+        state.musicEnabled = !state.musicEnabled;
+        const btn = e.currentTarget;
+        btn.classList.toggle('bg-emerald-50', state.musicEnabled);
+        btn.classList.toggle('border-emerald-200', state.musicEnabled);
+        btn.classList.toggle('text-emerald-700', state.musicEnabled);
+        btn.classList.toggle('bg-slate-50', !state.musicEnabled);
+        btn.classList.toggle('border-slate-200', !state.musicEnabled);
+        btn.classList.toggle('text-slate-500', !state.musicEnabled);
+        document.getElementById('icon-music-on').classList.toggle('hidden', !state.musicEnabled);
+        document.getElementById('icon-music-off').classList.toggle('hidden', state.musicEnabled);
+
+        if (state.musicEnabled) {
+          await SoundFX.init();
+        }
+        SoundFX.syncMusicState();
+      });
+
+      // Bilingual English / Traditional Chinese Toggle
+      document.getElementById('btn-lang').addEventListener('click', (e) => {
+        state.showChinese = !state.showChinese;
+        e.currentTarget.classList.toggle('bg-blue-50', state.showChinese);
+        e.currentTarget.classList.toggle('border-blue-300', state.showChinese);
+        e.currentTarget.classList.toggle('text-blue-700', state.showChinese);
+        document.querySelectorAll('.zh-label').forEach((el) => {
+          el.classList.toggle('hidden', !state.showChinese);
+        });
+      });
+
+      // Sound Toggle
+      document.getElementById('btn-sound').addEventListener('click', async () => {
+        state.soundEnabled = !state.soundEnabled;
+        document.getElementById('icon-sound-on').classList.toggle('hidden', !state.soundEnabled);
+        document.getElementById('icon-sound-off').classList.toggle('hidden', state.soundEnabled);
+        if (state.soundEnabled) {
+          await SoundFX.init();
+        }
+        SoundFX.syncMusicState();
+      });
+
+      // Formula Sheet Modal Controls
+      const refModal = document.getElementById('modal-reference');
+      document.getElementById('btn-reference').addEventListener('click', () => {
+        refModal.classList.remove('hidden');
+        refModal.classList.add('flex');
+      });
+      const closeRef = () => {
+        refModal.classList.add('hidden');
+        refModal.classList.remove('flex');
+      };
+      document.getElementById('btn-close-reference').addEventListener('click', closeRef);
+      document.getElementById('btn-close-reference-bottom').addEventListener('click', closeRef);
+      refModal.addEventListener('click', (e) => {
+        if (e.target === refModal) closeRef();
+      });
+
+      // Victory Modal Controls
+      const vicModal = document.getElementById('modal-victory');
+      document.getElementById('btn-victory-level').addEventListener('click', () => {
+        vicModal.classList.add('hidden');
+        vicModal.classList.remove('flex');
+        levelModal.classList.remove('hidden');
+        levelModal.classList.add('flex');
+      });
+      document.getElementById('btn-victory-replay').addEventListener('click', () => {
+        vicModal.classList.add('hidden');
+        vicModal.classList.remove('flex');
+        initNewGame();
+      });
+      document.getElementById('btn-victory-review').addEventListener('click', () => {
+        vicModal.classList.add('hidden');
+        vicModal.classList.remove('flex');
+        refModal.classList.remove('hidden');
+        refModal.classList.add('flex');
+      });
+    });
+  </script>
+</body>
+</html>
